@@ -44,7 +44,7 @@
 
 ### Решение
 
-![](https://i.ibb.co/xD1HWFV/image.png)
+![](https://i.ibb.co/mzm3Ntb/image.png)
 
 ## Задание 2. Микроархитектура
 
