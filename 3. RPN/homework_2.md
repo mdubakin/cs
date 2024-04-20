@@ -60,6 +60,23 @@
     0 0 1 0
         ^
 
+Решение:
+
+```
+0 0 0 0 
+        
+00: >> 1
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
+
 ## Задание 2. Недеструктивный NOT
 
 Разработать программу для машины Поста, выпоняющую операцию НЕ над первой ячейкой и записывающую результат во вторую:
@@ -67,6 +84,25 @@
     1 1 -> 1 0
     0 0 -> 0 1
     1 0 -> 1 0
+
+Решение:
+
+```
+1 1 
+        
+00: ? 10 : 20
+10: > 0 x
+20: > 1 x
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
 
 ## Задание 3. Копирование ячейки
 
@@ -86,6 +122,25 @@
     1 1 0 0
       ^
 
+Решение:
+
+```
+1 0 0 0 
+        
+00: ? 10 : 20
+10: > 1 x
+20: > 0 x
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
+
 ## Задание 4. Копирование двух ячеек
 
 Разработать программу для машины Поста, копирующую значения ячеек 1 и 2 в ячейки 3 и 4 соответственно.
@@ -98,21 +153,115 @@
 
     1 0 1 0
 
+Решение:
+
+```
+0 0 1 1 
+        
+00: ? 10 : 20
+10: >> 1
+11: !21
+20: >> 0
+21: <
+22: ? 30 : 40
+30: >> 1 x
+40: >> 0
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
+
 ## Задание 5. Дизъюнкция
 
 Разработать программу для машины Поста, выполняющую операцию ИЛИ над первыми двумя ячейками и записывающую результат в третью:
 
     1 0 0 0 -> 1 0 1 0
 
+Решение:
+
+```
+0 0 1 1 
+        
+00: ? 21 : 10
+10: >
+11: ? 22 : 20
+20: > 0 x
+21: >
+22: > 1
+30:
+40:
+50:
+60: 
+70: 
+80: 
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
+
 ## Задание 6. Конъюнкция
 
 Разработать программу для машины Поста, выполняющую операцию И над первыми двумя ячейками и записывающую результат в третью.
+
+Решение:
+
+```
+1 0 1 1 
+        
+00: ? 10 : 19
+10: >
+11: ? 22 : 20
+19: >
+20: > 0 x
+21: >
+22: > 1
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
 
 ## Задание 7. Универсальные машины
 
 Пусть лента машины Поста заполнена нулями, но где-то на ней стоит одна единица.
 
 Разработать программу для машины Поста, перемещающую курсор машины к этой единице.
+
+Решение:
+
+```
+0 0 0 0 0 1 0 
+        
+00: ? 99 : 10
+10: >
+11: !00
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
 
 ## Задание 8. Универсальные машины
 
@@ -127,6 +276,27 @@
 конечное состояние должно быть
 
     0 0 0 0 1 1 1 1 1 0 0 0 0
+
+Решение:
+
+```
+0 0 0 0 1 0 0 0 1 0 0 0 0
+        
+00: ? 12 : 10
+10: >
+11: !00
+12: 1 >
+19: ? 99 : 12
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
 
 ## Задание 9. Универсальные машины
 
@@ -153,6 +323,28 @@
     1 1 1 1 0 0 0 0
 
 так как 2 + 2 == 4.
+
+Решение:
+
+```
+1 1 0 1 1 0 0 0
+
+00: >
+10: ? 00 : 20
+20: > 
+30: ? 40 : 99 
+40: < 1 > 0 >
+50: !30
+99: x               ; stop
+
+; x - stop
+; < - move left
+; > - move right 
+; 1 - write one, 
+; 0 - write zero
+; ? n1 : n2 - if current cell equals to one then jump by first target
+;     otherwise jump by second target
+```
 
 ## Рекомендуемая литература и ресурсы
 
