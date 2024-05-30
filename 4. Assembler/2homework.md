@@ -90,6 +90,46 @@ Note: Такое соглашение действует в языке C. (В Go
 
 ```
 
+format ELF64 executable
+entry main
+
+s db "true", 0
+
+print_s:
+    mov rsi, [rsp + 8]
+.loop:
+    movzx rax, byte[rsi]
+    cmp rax, 0
+    je .exit
+    
+    push rsi
+    push rax
+    call putchar
+    
+    pop rsi
+    add rsi, 1
+    jmp .loop
+.exit:
+    ret 
+
+putchar:
+    add rsp, 8
+    mov rsi, rsp
+    mov rdx, 1
+    mov rdi, 1 
+    mov rax, 1
+    sub rsp, 8
+    syscall
+    ret 8
+
+main:
+    push s
+    call print_s
+
+exit:
+    mov rdi, 0          ; exit code 0
+    mov rax, 60         ; exit
+    syscall             ; jmp to OS kernel
 ```
 
 ---
