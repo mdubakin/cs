@@ -332,6 +332,67 @@ int main(void)
 
 Вопрос: Что делает данная функция? Какую задачу она решает?
 
+Ответ: Переводит из нижнего регистра в верхний и наоборот. Однако перенсти именно этот алгоритм на Си не вышло.
+
+---
+
+Решение:
+
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+// что-то не работает :)
+char convert_char(unsigned char c)
+{
+    c -= '0';
+    if (c < 10)
+    {
+        return c;
+    }
+    c += '0';
+    c -= 'A' - 10;
+    if (c < 16)
+    {
+        return c;
+    }
+    c += 'A';
+    c -= 'a';
+    return c;
+}
+
+char my_convert_char(unsigned char c)
+{
+    bool lower = c >= 97 && c <= 122;
+    bool upper = c >= 65 && c <= 90;
+    if (lower)
+    {
+        return c - ('a' - 'A');
+    }
+    if (upper)
+    {
+        return c + ('a' - 'A');
+    }
+    return c;
+}
+
+int main(void)
+{
+    printf("1: %c\n", convert_char('a'));
+    printf("2: %c\n", convert_char('B'));
+    printf("3: %c\n", convert_char(' '));
+    printf("4: %c\n", convert_char('0'));
+
+    putchar('\n');
+
+    printf("1: %c\n", my_convert_char('a'));
+    printf("2: %c\n", my_convert_char('B'));
+    printf("3: %c\n", my_convert_char(' '));
+    printf("4: %c\n", my_convert_char('0'));
+    return 0;
+}
+```
+
 ## Задание 6
 
 Портировать следующую функцию на язык C:
@@ -344,13 +405,13 @@ int main(void)
         add rax, '0'
         sub rax, 'A'
         cmp rax, 0
-        jl done
+        jl .done
         add rax, 'A'
         sub rax, 'a'
         cmp rax, 0
-        jl done
+        jl .done
         cmp rax, 15
-        jg done
+        jg .done
         mov rax, 1
         ret 8
     .done:
@@ -358,6 +419,54 @@ int main(void)
         ret 8
 
 Вопрос: Что делает данная функция? Какую задачу она решает?
+
+Ответ: Функция проверяет, что символ находится в диапазоне от 'a' до 'p', если так, отдает 1, иначе 0.
+
+---
+
+Решение:
+
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+bool check_char(unsigned char c)
+{
+    if (c - '0' < 0 ||
+        c - 'A' < 0 ||
+        c - 'a' < 0 ||
+        c - 'a' > 15)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool my_check_char(unsigned char c)
+{
+    return c >= 'a' && c <= 'p';
+}
+
+int main(void)
+{
+    printf("5: %d\n", check_char('5'));
+    printf("Z: %d\n", check_char('Z'));
+    printf("a: %d\n", check_char('a'));
+    printf("e: %d\n", check_char('e'));
+    printf("p: %d\n", check_char('p'));
+    printf("q: %d\n", check_char('q'));
+
+    putchar('\n');
+
+    printf("5: %d\n", my_check_char('5'));
+    printf("Z: %d\n", my_check_char('Z'));
+    printf("a: %d\n", my_check_char('a'));
+    printf("e: %d\n", my_check_char('e'));
+    printf("p: %d\n", my_check_char('p'));
+    printf("q: %d\n", my_check_char('q'));
+    return 0;
+}
+```
 
 ## Задание 7
 
@@ -384,6 +493,41 @@ int main(void)
         ret 3 * 8
 
 Вопрос: Что делает данная функция? Какую задачу она решает?
+
+Ответ: Находит наибольшее число из 3 при дважды вызывает функцию `max2`, для поиска промежуточного и конечного максимума.
+
+---
+
+Решение:
+
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+int max2(int a, int b)
+{
+    if (a > b)
+    {
+        return a;
+    }
+    return b;
+}
+
+int max3(int a, int b, int c)
+{
+    int _max = max2(a, b);
+    return max2(_max, c);
+}
+
+int main(void)
+{
+    printf("1, 2, 3: %d\n", max3(1, 2, 3));
+    printf("6, 5, 4: %d\n", max3(6, 5, 4));
+    printf("7, 9, 8: %d\n", max3(7, 9, 8));
+    printf("0, 0, 0: %d\n", max3(0, 0, 0));
+    return 0;
+}
+```
 
 ## Задание 8
 
@@ -425,6 +569,40 @@ int main(void)
 
 Желательно портировать максимально близко к исходнику.
 
+---
+
+Решение:
+
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+int max2(int a, int b)
+{
+    if (a > b)
+    {
+        return a;
+    }
+    return b;
+}
+
+int max4(int a, int b, int c, int d)
+{
+    int _max = max2(a, b);
+    _max = max2(_max, c);
+    return max2(_max, d);
+}
+
+int main(void)
+{
+    printf("1, 2, 1, 3: %d\n", max4(1, 2, 1, 3));
+    printf("6, 5, 4, 3: %d\n", max4(6, 5, 4, 3));
+    printf("7, 9, 8, 6: %d\n", max4(7, 9, 8, 6));
+    printf("0, 0, 0, 0: %d\n", max4(0, 0, 0, 0));
+    return 0;
+}
+```
+
 ## Задание 9
 
 Портировать следующую функцию на язык C:
@@ -448,6 +626,30 @@ int main(void)
     .exit:
         ret 8
 
+---
+
+Решение:
+
+```c
+#include <stdio.h>
+
+void print_string(char *str)
+{
+    putchar(*str);
+    str++;
+    if (*str != '\0')
+    {
+        print_string(str);
+    }
+}
+
+int main(void)
+{
+    print_string("Hello, World!");
+    return 0;
+}
+```
+
 ## Задание 10
 
 Портировать следующую функцию на язык C:
@@ -466,6 +668,44 @@ int main(void)
         ret 8
 
 где `t` и `f` - глобальные строковые переменные, желательно максимально близко выразить это.
+
+---
+
+Решение:
+
+```c
+#include <stdio.h>
+
+char *f = "false\n";
+char *t = "true\n";
+
+void print_string(char *str)
+{
+    putchar(*str);
+    str++;
+    if (*str != '\0')
+    {
+        print_string(str);
+    }
+}
+
+void print_bool(int b)
+{
+    if (!b)
+    {
+        return print_string(f);
+    }
+    return print_string(t);
+}
+
+int main(void)
+{
+    print_bool(-100);
+    print_bool(0);
+    print_bool(100);
+    return 0;
+}
+```
 
 ## Рекомендуемая литература
 
